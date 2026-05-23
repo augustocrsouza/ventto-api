@@ -1,0 +1,15 @@
+### Cadastrar o primeiro evento de drinks
+POST http://localhost:8080/eventos
+Content-Type: application/json
+
+{
+  "nome": "Casamento Clássico - Open Bar",
+  "cliente": "Brunna",
+  "local": "Salão de Festas Requinte",
+  "data": "2026-11-28"
+}
+
+###
+
+### Listar todos os eventos cadastrados
+GET http://localhost:8080/eventos
