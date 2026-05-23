@@ -1,24 +1,28 @@
 package com.realizecontrolando.controle_eventos.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.math.BigDecimal;
 
-@Entity // Diz ao JPA que esta classe é uma tabela no BD
+@Entity
+@Table(name = "evento")
+@Inheritance(strategy = InheritanceType.JOINED) // Ativa a estratégia de tabelas unidas
 public class Evento {
 
-    @Id // Define o 'id' como chave primária
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Configura o BD para gerar o ID
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
-    private String cliente;
-    private String data; // Vamos usar String por simplicidade, mas o ideal seria LocalDate
-    private String local;
 
-    // Construtor vazio (obrigatório pelo JPA)
-    public Evento() {
-    }
+    private Long idFornecedor;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
+
+    private LocalDate dataEvento;
+    private String turnoHorario;
+    private String localFesta;
+    private BigDecimal valorTotalFinal;
 
     public Long getId() {
         return id;
@@ -28,43 +32,51 @@ public class Evento {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public Long getIdFornecedor() {
+        return idFornecedor;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setIdFornecedor(Long idFornecedor) {
+        this.idFornecedor = idFornecedor;
     }
 
-    public String getCliente() {
+    public Cliente getCliente() {
         return cliente;
     }
 
-    public void setCliente(String cliente) {
+    public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 
-    public String getData() {
-        return data;
+    public LocalDate getDataEvento() {
+        return dataEvento;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setDataEvento(LocalDate dataEvento) {
+        this.dataEvento = dataEvento;
     }
 
-    public String getLocal() {
-        return local;
+    public String getTurnoHorario() {
+        return turnoHorario;
     }
 
-    public void setLocal(String local) {
-        this.local = local;
+    public void setTurnoHorario(String turnoHorario) {
+        this.turnoHorario = turnoHorario;
     }
 
-    // Construtor para facilitar a criação de novos objetos
-    public Evento(String nome, String cliente, String data, String local) {
-        this.nome = nome;
-        this.cliente = cliente;
-        this.data = data;
-        this.local = local;
+    public String getLocalFesta() {
+        return localFesta;
+    }
+
+    public void setLocalFesta(String localFesta) {
+        this.localFesta = localFesta;
+    }
+
+    public BigDecimal getValorTotalFinal() {
+        return valorTotalFinal;
+    }
+
+    public void setValorTotalFinal(BigDecimal valorTotalFinal) {
+        this.valorTotalFinal = valorTotalFinal;
     }
 }
