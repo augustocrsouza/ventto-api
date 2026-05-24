@@ -1,6 +1,7 @@
 package br.com.venttoapp.evento;
 
 import br.com.venttoapp.cliente.Cliente;
+import br.com.venttoapp.fornecedor.Fornecedor; // <-- Importamos a sua nova classe aqui!
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.math.BigDecimal;
@@ -14,7 +15,10 @@ public class Evento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long idFornecedor;
+    // Saiu o "Long idFornecedor" solto, e entrou o relacionamento real:
+    @ManyToOne
+    @JoinColumn(name = "fornecedor_id", nullable = false)
+    private Fornecedor fornecedor;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -25,6 +29,9 @@ public class Evento {
     private String localFesta;
     private BigDecimal valorTotalFinal;
 
+
+    // --- GETTERS E SETTERS ---
+
     public Long getId() {
         return id;
     }
@@ -33,12 +40,13 @@ public class Evento {
         this.id = id;
     }
 
-    public Long getIdFornecedor() {
-        return idFornecedor;
+    // Novos Getter e Setter para o objeto Fornecedor
+    public Fornecedor getFornecedor() {
+        return fornecedor;
     }
 
-    public void setIdFornecedor(Long idFornecedor) {
-        this.idFornecedor = idFornecedor;
+    public void setFornecedor(Fornecedor fornecedor) {
+        this.fornecedor = fornecedor;
     }
 
     public Cliente getCliente() {

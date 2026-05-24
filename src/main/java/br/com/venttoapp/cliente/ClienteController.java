@@ -1,24 +1,27 @@
 package br.com.venttoapp.cliente;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/clientes") // Nova rota exclusiva para clientes
+@RequestMapping("/clientes")
+@CrossOrigin("*")
 public class ClienteController {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+    private final ClienteService service;
 
-    @PostMapping
-    public Cliente criarCliente(@RequestBody Cliente cliente) {
-        return clienteRepository.save(cliente);
+    public ClienteController(ClienteService service) {
+        this.service = service;
     }
 
-    @GetMapping
-    public List<Cliente> listarClientes() {
-        return clienteRepository.findAll();
+    // O "envelope" que vai receber a ficha do front-end (note que usamos "documento")
+    public record ClienteRequest(String nome, String documento, String telefone, String email) {}
+
+    @PostMapping("/buscar-ou-cadastrar")
+    public ResponseEntity<Cliente> buscarOuCadastrar(@RequestBody ClienteRequest request) {
+        Cliente clienteProcessado = service.buscarOuCadastrar(
+                request.nome(), request.documento(), request.telefone(), request.email()
+        );
+        return ResponseEntity.ok(clienteProcessado);
     }
 }

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VenttoApp - Portal do Fornecedor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans h-screen flex flex-col">
+
+<header class="bg-indigo-600 text-white p-4 shadow-md flex justify-between items-center">
+    <h1 class="text-2xl font-bold tracking-tight">VenttoApp</h1>
+    <div class="flex items-center gap-4">
+        <span id="user-badge" class="hidden bg-indigo-500 px-3 py-1 rounded-full text-sm font-medium"></span>
+        <button id="btn-sair" onclick="sair()" class="hidden text-sm text-indigo-200 hover:text-white font-bold">Sair</button>
+    </div>
+</header>
+
+<main class="flex-grow flex items-center justify-center p-6">
+
+    <div id="tela-login" class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center transition-all">
+        <h2 class="text-xl font-semibold mb-6">Acesso do Fornecedor</h2>
+        <form onsubmit="fazerLogin(event)">
+            <input type="email" id="loginEmail" required placeholder="E-mail" class="w-full mb-4 p-3 border border-slate-300 rounded focus:ring-2 focus:ring-indigo-500 outline-none">
+            <input type="password" id="loginSenha" required placeholder="Senha" class="w-full mb-6 p-3 border border-slate-300 rounded focus:ring-2 focus:ring-indigo-500 outline-none">
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded transition-colors mb-4">Entrar</button>
+        </form>
+        <p class="text-sm text-slate-500">Ainda não tem conta? <button onclick="mudarTela('tela-cadastro')" class="text-indigo-600 font-bold hover:underline">Cadastre-se</button></p>
+    </div>
+
+    <div id="tela-cadastro" class="hidden bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center transition-all">
+        <h2 class="text-xl font-semibold mb-6">Criar Nova Conta</h2>
+        <form onsubmit="fazerCadastro(event)">
+            <input type="text" id="cadNome" required placeholder="Seu Nome" class="w-full mb-4 p-3 border border-slate-300 rounded outline-none focus:ring-2 focus:ring-indigo-500">
+            <input type="text" id="cadEmpresa" required placeholder="Nome da Empresa (Ex: Realize Drinks)" class="w-full mb-4 p-3 border border-slate-300 rounded outline-none focus:ring-2 focus:ring-indigo-500">
+
+            <select id="cadCategoria" required class="w-full mb-4 p-3 border border-slate-300 rounded outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                <option value="" disabled selected>Selecione sua Categoria Principal</option>
+                <option value="DRINKS">Bar de Drinks</option>
+                <option value="BUFFET">Buffet / Alimentação</option>
+                <option value="CERIMONIAL">Cerimonial / Assessoria</option>
+            </select>
+
+            <input type="email" id="cadEmail" required placeholder="Seu melhor e-mail" class="w-full mb-4 p-3 border border-slate-300 rounded outline-none focus:ring-2 focus:ring-indigo-500">
+            <input type="password" id="cadSenha" required placeholder="Crie uma senha" class="w-full mb-6 p-3 border border-slate-300 rounded outline-none focus:ring-2 focus:ring-indigo-500">
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded transition-colors mb-4">Finalizar Cadastro</button>
+        </form>
+        <p class="text-sm text-slate-500">Já tem conta? <button onclick="mudarTela('tela-login')" class="text-indigo-600 font-bold hover:underline">Faça login</button></p>
+    </div>
+
+    <div id="tela-dashboard" class="hidden w-full max-w-4xl transition-all">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-slate-800">Meus Eventos</h2>
+            <button onclick="abrirModalEvento()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded shadow-md transition-colors">+ Novo Evento</button>
+        </div>
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <table class="min-w-full divide-y divide-slate-200">
+                <thead class="bg-slate-100">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Cliente</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Data</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Cardápio</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Total</th>
+                </tr>
+                </thead>
+                <tbody id="tabela-eventos" class="bg-white divide-y divide-slate-200">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+<div id="modal-evento" class="hidden fixed inset-0 bg-slate-900 bg-opacity-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold">Cadastrar Novo Evento</h3>
+            <button type="button" onclick="fecharModalEvento()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+        </div>
+
+        <form id="form-evento" onsubmit="salvarEvento(event)" class="space-y-4">
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">CPF/CNPJ do Cliente</label>
+                    <input type="text" id="clienteDocumento" required placeholder="Apenas números" class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nome do Cliente</label>
+                    <input type="text" id="clienteNome" required placeholder="Ex: Carla" class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Telefone / WhatsApp</label>
+                    <input type="text" id="clienteTelefone" class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">E-mail do Cliente</label>
+                    <input type="email" id="clienteEmail" class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Data do Evento</label>
+                    <input type="date" id="dataEvento" required class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Turno</label>
+                    <select id="turnoHorario" class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+                        <option value="MANHA">Manhã</option>
+                        <option value="TARDE">Tarde</option>
+                        <option value="NOITE">Noite</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Local da Festa</label>
+                    <input type="text" id="localFesta" required class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Convidados</label>
+                    <input type="number" id="qtdConvidados" required class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Duração (Horas)</label>
+                    <input type="number" id="horasDuracao" required class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+                </div>
+                <div class="flex items-end pb-2">
+                    <label class="flex items-center space-x-2 text-sm font-medium text-slate-700">
+                        <input type="checkbox" id="temOutrasBebidas" class="rounded text-indigo-600">
+                        <span>Outras Bebidas?</span>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Cardápio</label>
+                <input type="text" id="cardapio" required class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Valor Base (R$)</label>
+                    <input type="number" step="0.01" id="valorBase" required class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Adicionais (R$)</label>
+                    <input type="number" step="0.01" id="valorAdicionais" class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Desconto (R$)</label>
+                    <input type="number" step="0.01" id="valorDesconto" class="w-full p-2 border border-slate-300 rounded outline-none focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div class="pt-4 flex justify-end space-x-3">
+                <button type="button" onclick="fecharModalEvento()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2 px-4 rounded transition-colors">Cancelar</button>
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded shadow-md transition-colors">Salvar Evento</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // ROTAS RELATIVAS: A prova de balas para CORS!
+    const API_FORNECEDOR = '/fornecedores';
+    const API_EVENTOS = '/eventos/drinks';
+    const API_CLIENTES = '/clientes';
+
+    function mudarTela(idTelaAlvo) {
+        document.getElementById('tela-login').classList.add('hidden');
+        document.getElementById('tela-cadastro').classList.add('hidden');
+        document.getElementById('tela-dashboard').classList.add('hidden');
+        document.getElementById(idTelaAlvo).classList.remove('hidden');
+    }
+
+    function sair() {
+        localStorage.removeItem('fornecedorId');
+        document.getElementById('user-badge').classList.add('hidden');
+        document.getElementById('btn-sair').classList.add('hidden');
+        mudarTela('tela-login');
+    }
+
+    async function fazerCadastro(event) {
+        event.preventDefault();
+        console.log("Iniciando processo de cadastro...");
+
+        const payload = {
+            nome: document.getElementById('cadNome').value,
+            nomeEmpresa: document.getElementById('cadEmpresa').value,
+            categoria: document.getElementById('cadCategoria').value,
+            email: document.getElementById('cadEmail').value,
+            senha: document.getElementById('cadSenha').value
+        };
+
+        try {
+            const resposta = await fetch(`${API_FORNECEDOR}/cadastrar`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (resposta.ok) {
+                const texto = await resposta.text();
+                alert(texto);
+                mudarTela('tela-login');
+            } else {
+                const erroBack = await resposta.text();
+                alert("O Back-end recusou o cadastro. Motivo: " + erroBack);
+            }
+        } catch (erro) {
+            console.error("Erro fatal no fetch de cadastro:", erro);
+            alert("O servidor está offline ou deu erro de conexão. Aperte F12 e olhe o Console.");
+        }
+    }
+
+    async function fazerLogin(event) {
+        event.preventDefault();
+        console.log("Iniciando processo de login...");
+
+        const payload = {
+            email: document.getElementById('loginEmail').value,
+            senha: document.getElementById('loginSenha').value
+        };
+
+        try {
+            const resposta = await fetch(`${API_FORNECEDOR}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (resposta.ok) {
+                const fornecedor = await resposta.json();
+                console.log("Login bem sucedido! Dados:", fornecedor);
+
+                localStorage.setItem('fornecedorId', fornecedor.id);
+
+                document.getElementById('user-badge').innerText = fornecedor.nomeEmpresa;
+                document.getElementById('user-badge').classList.remove('hidden');
+                document.getElementById('btn-sair').classList.remove('hidden');
+
+                mudarTela('tela-dashboard');
+                buscarEventosNaAPI();
+            } else {
+                const erroBack = await resposta.text();
+                alert("Erro no login: E-mail ou senha incorretos. Resposta do servidor: " + erroBack);
+            }
+        } catch (erro) {
+            console.error("Erro fatal no fetch de login:", erro);
+            alert("O servidor está offline ou deu erro de conexão. Verifique se o Spring Boot está rodando.");
+        }
+    }
+
+    async function buscarEventosNaAPI() {
+        try {
+            const resposta = await fetch(API_EVENTOS);
+            if(!resposta.ok) throw new Error("Erro ao carregar os eventos.");
+
+            const eventos = await resposta.json();
+            const tbody = document.getElementById('tabela-eventos');
+            tbody.innerHTML = '';
+
+            eventos.forEach(evento => {
+                const nomeCliente = evento.cliente ? evento.cliente.nome : `Cliente ID ${evento.cliente.id}`;
+                const valor = evento.valorTotalFinal ? `R$ ${evento.valorTotalFinal.toFixed(2)}` : 'R$ 0,00';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">${nomeCliente}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">${evento.dataEvento}</td>
+                    <td class="px-6 py-4 text-sm text-slate-500">${evento.cardapio}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">${valor}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (erro) {
+            console.error("Erro ao buscar eventos:", erro);
+        }
+    }
+
+    function abrirModalEvento() {
+        document.getElementById('form-evento').reset();
+        document.getElementById('modal-evento').classList.remove('hidden');
+    }
+
+    function fecharModalEvento() {
+        document.getElementById('modal-evento').classList.add('hidden');
+    }
+
+    async function salvarEvento(event) {
+        event.preventDefault();
+        const idDoFornecedorLogado = localStorage.getItem('fornecedorId');
+
+        if(!idDoFornecedorLogado) {
+            alert("Erro grave: Seu ID desapareceu da memória. Faça o login de novo.");
+            sair();
+            return;
+        }
+
+        console.log("Iniciando salvamento do Evento. Etapa 1: Validar Cliente.");
+
+        const dadosCliente = {
+            nome: document.getElementById('clienteNome').value,
+            documento: document.getElementById('clienteDocumento').value,
+            telefone: document.getElementById('clienteTelefone').value,
+            email: document.getElementById('clienteEmail').value
+        };
+
+        try {
+            const resCliente = await fetch(`${API_CLIENTES}/buscar-ou-cadastrar`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dadosCliente)
+            });
+
+            if (!resCliente.ok) {
+                const erroC = await resCliente.text();
+                alert("Falha ao salvar o Cliente no banco! Motivo: " + erroC);
+                return;
+            }
+
+            const clienteValidado = await resCliente.json();
+            console.log("Cliente validado com sucesso. ID:", clienteValidado.id);
+
+            console.log("Etapa 2: Enviando o Evento.");
+
+            const payloadEvento = {
+                fornecedor: { id: parseInt(idDoFornecedorLogado) },
+                cliente: { id: clienteValidado.id },
+                dataEvento: document.getElementById('dataEvento').value,
+                turnoHorario: document.getElementById('turnoHorario').value,
+                localFesta: document.getElementById('localFesta').value,
+                qtdConvidados: parseInt(document.getElementById('qtdConvidados').value),
+                horasDuracao: parseInt(document.getElementById('horasDuracao').value),
+                temOutrasBebidas: document.getElementById('temOutrasBebidas').checked,
+                cardapio: document.getElementById('cardapio').value,
+                valorBase: parseFloat(document.getElementById('valorBase').value),
+                valorAdicionais: parseFloat(document.getElementById('valorAdicionais').value) || 0,
+                valorDesconto: parseFloat(document.getElementById('valorDesconto').value) || 0
+            };
+
+            const resEvento = await fetch(API_EVENTOS, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payloadEvento)
+            });
+
+            if (resEvento.ok) {
+                alert("BINGO! Evento salvo e amarrado ao Fornecedor e ao Cliente!");
+                fecharModalEvento();
+                buscarEventosNaAPI();
+            } else {
+                const erroE = await resEvento.text();
+                alert("Erro ao salvar os detalhes do evento! Motivo: " + erroE);
+            }
+        } catch (erro) {
+            console.error("Erro de comunicação geral no Fluxo de Eventos:", erro);
+            alert("Falha de conexão com o banco de dados. Olhe o F12 ou o terminal do Java.");
+        }
+    }
+</script>
+</body>
+</html>

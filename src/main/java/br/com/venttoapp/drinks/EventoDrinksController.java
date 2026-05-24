@@ -6,6 +6,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/eventos/drinks")
+@CrossOrigin("*")
 public class EventoDrinksController {
 
     // 1. Injetamos o nosso "cérebro" das regras de negócio
