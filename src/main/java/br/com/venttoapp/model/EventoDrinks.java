@@ -1,4 +1,4 @@
-package com.realizecontrolando.controle_eventos.model;
+package br.com.venttoapp.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

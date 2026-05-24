@@ -1,6 +1,6 @@
-package com.realizecontrolando.controle_eventos.repository;
+package br.com.venttoapp.repository;
 
-import com.realizecontrolando.controle_eventos.model.Evento;
+import br.com.venttoapp.model.Evento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

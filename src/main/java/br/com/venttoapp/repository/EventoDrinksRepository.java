@@ -1,6 +1,6 @@
-package com.realizecontrolando.controle_eventos.repository;
+package br.com.venttoapp.repository;
 
-import com.realizecontrolando.controle_eventos.model.EventoDrinks;
+import br.com.venttoapp.model.EventoDrinks;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EventoDrinksRepository extends JpaRepository<EventoDrinks, Long> {

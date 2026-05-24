@@ -1,4 +1,4 @@
-package com.realizecontrolando.controle_eventos;
+package br.com.venttoapp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

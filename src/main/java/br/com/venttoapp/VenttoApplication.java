@@ -1,13 +1,13 @@
-package com.realizecontrolando.controle_eventos;
+package br.com.venttoapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ControleEventosApplication {
+public class VenttoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ControleEventosApplication.class, args);
+		SpringApplication.run(VenttoApplication.class, args);
 	}
 
 }

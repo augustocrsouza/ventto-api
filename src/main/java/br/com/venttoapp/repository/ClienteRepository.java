@@ -1,6 +1,6 @@
-package com.realizecontrolando.controle_eventos.repository;
+package br.com.venttoapp.repository;
 
-import com.realizecontrolando.controle_eventos.model.Cliente;
+import br.com.venttoapp.model.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
