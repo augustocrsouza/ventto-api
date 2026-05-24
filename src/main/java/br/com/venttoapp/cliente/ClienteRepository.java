@@ -1,6 +1,5 @@
-package br.com.venttoapp.repository;
+package br.com.venttoapp.cliente;
 
-import br.com.venttoapp.model.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {

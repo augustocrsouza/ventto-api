@@ -1,6 +1,5 @@
-package br.com.venttoapp.repository;
+package br.com.venttoapp.evento;
 
-import br.com.venttoapp.model.Evento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

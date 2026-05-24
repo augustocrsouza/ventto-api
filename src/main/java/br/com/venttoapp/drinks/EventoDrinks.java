@@ -1,5 +1,6 @@
-package br.com.venttoapp.model;
+package br.com.venttoapp.drinks;
 
+import br.com.venttoapp.evento.Evento;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 

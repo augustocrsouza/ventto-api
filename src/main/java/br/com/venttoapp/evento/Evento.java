@@ -1,11 +1,12 @@
-package br.com.venttoapp.model;
+package br.com.venttoapp.evento;
 
+import br.com.venttoapp.cliente.Cliente;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "evento")
+@Table(name = "br/com/venttoapp/evento")
 @Inheritance(strategy = InheritanceType.JOINED) // Ativa a estratégia de tabelas unidas
 public class Evento {
 

@@ -1,7 +1,5 @@
-package br.com.venttoapp.controller;
+package br.com.venttoapp.cliente;
 
-import br.com.venttoapp.model.Cliente;
-import br.com.venttoapp.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

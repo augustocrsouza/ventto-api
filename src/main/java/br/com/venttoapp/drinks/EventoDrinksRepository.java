@@ -1,6 +1,5 @@
-package br.com.venttoapp.repository;
+package br.com.venttoapp.drinks;
 
-import br.com.venttoapp.model.EventoDrinks;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EventoDrinksRepository extends JpaRepository<EventoDrinks, Long> {

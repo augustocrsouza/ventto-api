@@ -1,7 +1,5 @@
-package br.com.venttoapp.controller;
+package br.com.venttoapp.drinks;
 
-import br.com.venttoapp.model.EventoDrinks;
-import br.com.venttoapp.repository.EventoDrinksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
