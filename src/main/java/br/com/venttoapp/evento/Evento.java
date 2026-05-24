@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "br/com/venttoapp/evento")
+@Table(name = "evento")
 @Inheritance(strategy = InheritanceType.JOINED) // Ativa a estratégia de tabelas unidas
 public class Evento {
 

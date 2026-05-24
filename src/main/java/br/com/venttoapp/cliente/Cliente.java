@@ -3,7 +3,7 @@ package br.com.venttoapp.cliente;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "br/com/venttoapp/cliente")
+@Table(name = "cliente")
 public class Cliente {
 
     @Id
